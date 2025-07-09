@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    
+    <!-- USERS Table -->
+    <mxCell id="users_table" value="USERS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+      <mxGeometry x="200" y="200" width="200" height="156" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="users_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_wallet" value="wallet_address: TEXT (UK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="users_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_email" value="email: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="users_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_created" value="created_at: TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="users_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_active" value="is_active: BOOLEAN" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="users_table">
+      <mxGeometry y="130" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- MINING_SESSIONS Table -->
+    <mxCell id="mining_table" value="MINING_SESSIONS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+      <mxGeometry x="500" y="120" width="200" height="208" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="mining_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_user_id" value="🔗 user_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#d79b00;" vertex="1" parent="mining_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_start" value="start_time: TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="mining_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_end" value="end_time: TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="mining_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_duration" value="duration: INTEGER" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="mining_table">
+      <mxGeometry y="130" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_reward" value="reward_point: DECIMAL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="mining_table">
+      <mxGeometry y="156" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="mining_status" value="status: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="mining_table">
+      <mxGeometry y="182" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- REFERRALS Table -->
+    <mxCell id="referrals_table" value="REFERRALS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+      <mxGeometry x="200" y="400" width="200" height="130" as="geometry"/>
+    </mxCell>
+    <mxCell id="referrals_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="referrals_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="referrals_referrer" value="🔗 referrer_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#5d1a8b;" vertex="1" parent="referrals_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="referrals_referred" value="🔗 referred_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#5d1a8b;" vertex="1" parent="referrals_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="referrals_created" value="created_at: TIMESTAMP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="referrals_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- BOOSTERS Table -->
+    <mxCell id="boosters_table" value="BOOSTERS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+      <mxGeometry x="500" y="400" width="200" height="130" as="geometry"/>
+    </mxCell>
+    <mxCell id="boosters_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="boosters_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="boosters_user_id" value="🔗 user_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#a0201e;" vertex="1" parent="boosters_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="boosters_type" value="booster_type: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="boosters_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="boosters_status" value="status: BOOLEAN" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="boosters_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- CARDS Table -->
+    <mxCell id="cards_table" value="CARDS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+      <mxGeometry x="50" y="550" width="200" height="130" as="geometry"/>
+    </mxCell>
+    <mxCell id="cards_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="cards_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="cards_user_id" value="🔗 user_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#2d7016;" vertex="1" parent="cards_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="cards_number" value="card_number: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="cards_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="cards_status" value="status: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="cards_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- CARD_TRANSACTIONS Table -->
+    <mxCell id="transactions_table" value="CARD_TRANSACTIONS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="1">
+      <mxGeometry x="350" y="550" width="200" height="156" as="geometry"/>
+    </mxCell>
+    <mxCell id="transactions_id" value="🔑 id: UUID (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontStyle=1;" vertex="1" parent="transactions_table">
+      <mxGeometry y="26" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="transactions_card_id" value="🔗 card_id: UUID (FK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#8f4000;" vertex="1" parent="transactions_table">
+      <mxGeometry y="52" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="transactions_type" value="type: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="transactions_table">
+      <mxGeometry y="78" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="transactions_amount" value="amount: DECIMAL" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="transactions_table">
+      <mxGeometry y="104" width="200" height="26" as="geometry"/>
+    </mxCell>
+    <mxCell id="transactions_currency" value="currency: TEXT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="transactions_table">
+      <mxGeometry y="130" width="200" height="26" as="geometry"/>
+    </mxCell>
+
+    <!-- Relationships -->
+    <!-- Users to Mining Sessions -->
+    <mxCell id="users_mining_rel" value="" style="endArrow=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="users_id" target="mining_user_id">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="450" y="350" as="sourcePoint"/>
+        <mxPoint x="500" y="300" as="targetPoint"/>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="users_mining_label1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="410" y="215" width="20" height="20" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_mining_label2" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="470" y="160" width="20" height="20" as="geometry"/>
+    </mxCell>
+
+    <!-- Users to Referrals (referrer) -->
+    <mxCell id="users_referrals_ref" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="users_table" target="referrals_table">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="250" y="370" as="sourcePoint"/>
+        <mxPoint x="300" y="390" as="targetPoint"/>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="users_ref_label1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="240" y="370" width="20" height="20" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_ref_label2" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="280" y="370" width="20" height="20" as="geometry"/>
+    </mxCell>
+
+    <!-- Users to Boosters -->
+    <mxCell id="users_boosters_rel" value="" style="endArrow=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="users_table" target="boosters_user_id">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="420" y="370" as="sourcePoint"/>
+        <mxPoint x="470" y="320" as="targetPoint"/>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="users_boosters_label1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="410" y="315" width="20" height="20" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_boosters_label2" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="470" y="440" width="20" height="20" as="geometry"/>
+    </mxCell>
+
+    <!-- Users to Cards -->
+    <mxCell id="users_cards_rel" value="" style="endArrow=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="users_table" target="cards_table">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="170" y="420" as="sourcePoint"/>
+        <mxPoint x="220" y="370" as="targetPoint"/>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="users_cards_label1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="180" y="370" width="20" height="20" as="geometry"/>
+    </mxCell>
+    <mxCell id="users_cards_label2" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="130" y="520" width="20" height="20" as="geometry"/>
+    </mxCell>
+
+    <!-- Cards to Card Transactions -->
+    <mxCell id="cards_transactions_rel" value="" style="endArrow=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="cards_id" target="transactions_card_id">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <mxPoint x="270" y="620" as="sourcePoint"/>
+        <mxPoint x="320" y="570" as="targetPoint"/>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="cards_trans_label1" value="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="260" y="565" width="20" height="20" as="geometry"/>
+    </mxCell>
+    <mxCell id="cards_trans_label2" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+      <mxGeometry x="320" y="590" width="20" height="20" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>
