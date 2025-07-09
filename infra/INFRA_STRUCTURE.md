@@ -14,6 +14,7 @@ Payzme 프로젝트는 React 기반의 프론트엔드, Supabase를 활용한 �
 | 프론트엔드       | React + Vite + Tailwind (Vercel에 배포)             |
 | 인증             | Supabase Auth + Web3Auth                            |
 | 백엔드 API       | Supabase Edge Functions (Node.js 기반, 서버리스)    |
+| 백엔드 Service    | Blockchain Event Webhook Server    |
 | 데이터베이스     | Supabase PostgreSQL                                 |
 | 카드 연동 API    | Rain (외부 카드 API 연동)                            |
 | 블록체인 연동    | Moralis, Infura                                      |
@@ -71,7 +72,7 @@ Supabase Edge Function (API 처리)
 | 클라이언트    | React SPA (Vercel)      |
 | 백엔드        | Supabase Edge Functions |
 | 데이터 저장소 | Supabase PostgreSQL     |
-| 기타 서버     | 없음 (Node 서버 미운영) |
+| 기타 서버     | Blockchain Webhook (Node) |
 
 ---
 
