@@ -80,7 +80,7 @@ Payzme는 **Web3Auth 기반 로그인**, **웹 마이닝**, **레퍼럴 보상**
 
 ## 📬 문의
 
-kevin@xxx.xxx
+kevin@hodltech.co
 
 ---
 
