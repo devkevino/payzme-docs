@@ -17,7 +17,7 @@ Payzme DApp은 Payzme 토큰 기반의 웹 마이닝 및 크립토카드 서비�
 | 백엔드     | Supabase EdgeFunction (Node.js)   |
 | DB         | Supabase (PostgreSQL 기반)        |
 | 배포       | AWS 또는 Vercel                   |
-| 연동       | Rain (카드 API), Infura, Moralis  |
+| 연동       | Rain (카드 API), Infura, Moralis, Yearn (Vaults API)  |
 
 ## 🧩 주요 기능별 구성
 
@@ -27,6 +27,7 @@ Payzme DApp은 Payzme 토큰 기반의 웹 마이닝 및 크립토카드 서비�
 - 마이닝 부스터: 로그인 보상, 연속 로그인, KYC 인증, 소셜 연동, 레퍼럴
 - 추천인 관리 (레퍼럴)
 - 카드 신청 및 사용 내역 조회
+- Yearn Vaults 예치/인출 및 수익 조회
 
 ### 관리자 영역
 - 사용자 관리
@@ -36,6 +37,7 @@ Payzme DApp은 Payzme 토큰 기반의 웹 마이닝 및 크립토카드 서비�
 ### 외부 연동
 - Infura / Moralis: 블록체인 트랜잭션 처리
 - Rain API: 카드 신청, 충전, 결제 내역 처리 등
+- Yearn Vaults API: 예치, 인출, Vault 정보 및 수익 데이터 연동
 
 ## 🔐 인증 및 보안
 - Web3Auth + Supabase 인증
@@ -49,6 +51,8 @@ Payzme DApp은 Payzme 토큰 기반의 웹 마이닝 및 크립토카드 서비�
 - referrals: 초대 내역
 - cards: 카드 신청 및 발급 정보
 - transactions: 결제/입금 내역
+- yearn_vaults: Yearn Vaults 정보
+- yearn_transactions: Yearn Vaults 예치/인출 내역
 
 ## 🌐 인프라 구성
 
@@ -58,5 +62,6 @@ Payzme DApp은 Payzme 토큰 기반의 웹 마이닝 및 크립토카드 서비�
 | DB & 인증    | Supabase (PostgreSQL)                |
 | 배포         | 수동 (CI/CD 없음)                    |
 | 모니터링     | Supabase 로그 또는 외부 서비스 연동 |
+| 외부 연동    | Rain, Infura, Moralis, Yearn Vaults |
 
 ---
