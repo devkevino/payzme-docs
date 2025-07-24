@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, Menu, X, Zap, Users, Gift, Wallet, Home, BarChart3, Settings, ExternalLink, Sun, Moon, CreditCard, Plus, ArrowUpRight, ArrowDownLeft, Copy, Eye, EyeOff } from 'lucide-react';
+import { ChevronDown, Menu, X, Zap, Users, Gift, Wallet, Home, BarChart3, Settings, ExternalLink, Sun, Moon, CreditCard, Plus, ArrowUpRight, ArrowDownLeft, Copy, Eye, EyeOff, TrendingUp, DollarSign, Shield, Clock, AlertTriangle } from 'lucide-react';
 
 const PayzMeApp = () => {
   const [currentPage, setCurrentPage] = useState('login');
@@ -59,7 +59,6 @@ const PayzMeApp = () => {
   );
 
   // 로그인 페이지
-  // 로그인 페이지
   const LoginPage = () => (
     <div className={`min-h-screen relative overflow-hidden ${theme.background}`}>
       {/* 배경 장식 요소들 */}
@@ -110,6 +109,7 @@ const PayzMeApp = () => {
       { id: 'dashboard', icon: Home, label: 'Dashboard' },
       { id: 'mining', icon: Zap, label: 'Mining' },
       { id: 'referral', icon: Users, label: 'Referral' },
+      { id: 'defi', icon: BarChart3, label: 'DeFi' },
       { id: 'card', icon: CreditCard, label: 'Card' },
     ];
 
@@ -212,7 +212,373 @@ const PayzMeApp = () => {
     );
   };
 
-  // 레퍼럴 페이지
+  // DeFi 페이지
+  const DeFiPage = () => {
+    const [selectedVault, setSelectedVault] = useState(null);
+    const [depositAmount, setDepositAmount] = useState('');
+    const [withdrawAmount, setWithdrawAmount] = useState('');
+    const [showDepositModal, setShowDepositModal] = useState(false);
+    const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+
+    // Mock 데이터
+    const vaults = [
+      {
+        id: 'usdt-vault',
+        name: 'USDT Vault',
+        symbol: 'USDT',
+        apy: 8.45,
+        tvl: '125.6M',
+        risk: 'Low',
+        userDeposit: 5000,
+        userEarnings: 342.5,
+        icon: '💵',
+        color: 'text-green-500',
+        bgColor: 'bg-green-500/10'
+      },
+      {
+        id: 'usdc-vault',
+        name: 'USDC Vault',
+        symbol: 'USDC',
+        apy: 7.32,
+        tvl: '98.3M',
+        risk: 'Low',
+        userDeposit: 3000,
+        userEarnings: 195.8,
+        icon: '🔵',
+        color: 'text-blue-500',
+        bgColor: 'bg-blue-500/10'
+      }
+    ];
+
+    const transactions = [
+      { type: 'deposit', vault: 'USDT', amount: 2000, date: '2024-07-20', hash: '0x1a2b...3c4d' },
+      { type: 'withdraw', vault: 'USDC', amount: 500, date: '2024-07-19', hash: '0x5e6f...7g8h' },
+      { type: 'deposit', vault: 'USDT', amount: 3000, date: '2024-07-18', hash: '0x9i0j...1k2l' },
+      { type: 'earnings', vault: 'USDC', amount: 45.2, date: '2024-07-17', hash: '0xm3n4...5o6p' },
+    ];
+
+    const totalDeposit = vaults.reduce((sum, vault) => sum + vault.userDeposit, 0);
+    const totalEarnings = vaults.reduce((sum, vault) => sum + vault.userEarnings, 0);
+    const avgApy = vaults.reduce((sum, vault) => sum + vault.apy, 0) / vaults.length;
+
+    const DepositModal = () => (
+      showDepositModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className={`${theme.cardBg} rounded-2xl p-6 border max-w-md w-full`}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className={`text-xl font-bold ${theme.textPrimary}`}>
+                Deposit to {selectedVault?.name}
+              </h3>
+              <button onClick={() => setShowDepositModal(false)}>
+                <X className={`w-6 h-6 ${theme.textSecondary}`} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${theme.textSecondary}`}>
+                  Amount ({selectedVault?.symbol})
+                </label>
+                <input
+                  type="number"
+                  value={depositAmount}
+                  onChange={(e) => setDepositAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  className={`w-full px-4 py-3 rounded-xl border ${theme.cardSecondary} ${theme.textPrimary} placeholder-gray-400 focus:outline-none focus:ring-2 ${isDarkTheme ? 'focus:ring-cyan-400' : 'focus:ring-blue-500'}`}
+                />
+              </div>
+
+              <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={theme.textSecondary}>Current APY</span>
+                  <span className={`${theme.textPrimary} font-medium`}>{selectedVault?.apy}%</span>
+                </div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={theme.textSecondary}>Estimated Monthly Earnings</span>
+                  <span className={`${theme.accent} font-medium`}>
+                    ${depositAmount ? ((parseFloat(depositAmount) * selectedVault?.apy / 100) / 12).toFixed(2) : '0.00'}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className={theme.textSecondary}>Risk Level</span>
+                  <span className="text-green-500 font-medium">{selectedVault?.risk}</span>
+                </div>
+              </div>
+
+              <button 
+                className={`w-full ${theme.gradientButton} text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105`}
+                onClick={() => {
+                  setShowDepositModal(false);
+                  setDepositAmount('');
+                }}
+              >
+                Confirm Deposit
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    );
+
+    const WithdrawModal = () => (
+      showWithdrawModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className={`${theme.cardBg} rounded-2xl p-6 border max-w-md w-full`}>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className={`text-xl font-bold ${theme.textPrimary}`}>
+                Withdraw from {selectedVault?.name}
+              </h3>
+              <button onClick={() => setShowWithdrawModal(false)}>
+                <X className={`w-6 h-6 ${theme.textSecondary}`} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${theme.textSecondary}`}>
+                  Amount ({selectedVault?.symbol})
+                </label>
+                <input
+                  type="number"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  max={selectedVault?.userDeposit}
+                  className={`w-full px-4 py-3 rounded-xl border ${theme.cardSecondary} ${theme.textPrimary} placeholder-gray-400 focus:outline-none focus:ring-2 ${isDarkTheme ? 'focus:ring-cyan-400' : 'focus:ring-blue-500'}`}
+                />
+              </div>
+
+              <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={theme.textSecondary}>Available Balance</span>
+                  <span className={`${theme.textPrimary} font-medium`}>${selectedVault?.userDeposit?.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={theme.textSecondary}>Total Earnings</span>
+                  <span className={`text-green-500 font-medium`}>${selectedVault?.userEarnings}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className={theme.textSecondary}>Withdrawal Fee</span>
+                  <span className={`${theme.textMuted}`}>0.1%</span>
+                </div>
+              </div>
+
+              <button 
+                className={`w-full ${theme.gradientButton} text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105`}
+                onClick={() => {
+                  setShowWithdrawModal(false);
+                  setWithdrawAmount('');
+                }}
+              >
+                Confirm Withdrawal
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+    );
+
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
+          <div>
+            <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>DeFi Vaults</h1>
+            <p className={theme.textSecondary}>Earn yield on your stablecoins with Yearn Finance integration.</p>
+          </div>
+          <div className={`mt-4 lg:mt-0 ${theme.cardBg} rounded-xl px-4 py-2 border`}>
+            <span className={`${theme.accent} font-medium flex items-center`}>
+              <Shield className="w-4 h-4 mr-2" />
+              Secured by Yearn
+            </span>
+          </div>
+        </div>
+
+        {/* 포트폴리오 요약 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <DollarSign className={`w-8 h-8 ${theme.accent}`} />
+              <TrendingUp className="w-5 h-5 text-green-500" />
+            </div>
+            <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>${totalDeposit.toLocaleString()}</p>
+            <p className={theme.textSecondary}>Total Deposited</p>
+          </div>
+
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <Gift className="w-8 h-8 text-green-500" />
+              <span className="text-green-500 text-sm font-medium">+{avgApy.toFixed(2)}% APY</span>
+            </div>
+            <p className={`text-3xl font-bold mb-2 text-green-500`}>${totalEarnings.toFixed(2)}</p>
+            <p className={theme.textSecondary}>Total Earnings</p>
+          </div>
+
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <BarChart3 className="w-8 h-8 text-purple-500" />
+              <Clock className="w-5 h-5 text-purple-500" />
+            </div>
+            <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>{avgApy.toFixed(2)}%</p>
+            <p className={theme.textSecondary}>Average APY</p>
+          </div>
+        </div>
+
+        {/* 사용 가능한 Vaults */}
+        <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+          <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Available Vaults</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {vaults.map((vault) => (
+              <div key={vault.id} className={`${theme.cardSecondary} rounded-xl p-6 border hover:border-opacity-70 transition-all duration-300`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-12 h-12 rounded-full ${vault.bgColor} flex items-center justify-center text-2xl`}>
+                      {vault.icon}
+                    </div>
+                    <div>
+                      <h4 className={`font-bold ${theme.textPrimary}`}>{vault.name}</h4>
+                      <p className={theme.textMuted}>Yearn Finance</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`text-2xl font-bold ${vault.color}`}>{vault.apy}%</p>
+                    <p className={`text-sm ${theme.textMuted}`}>APY</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <p className={`text-sm ${theme.textMuted} mb-1`}>TVL</p>
+                    <p className={`font-semibold ${theme.textPrimary}`}>${vault.tvl}</p>
+                  </div>
+                  <div>
+                    <p className={`text-sm ${theme.textMuted} mb-1`}>Risk Level</p>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-500">
+                      <Shield className="w-3 h-3 mr-1" />
+                      {vault.risk}
+                    </span>
+                  </div>
+                </div>
+
+                {vault.userDeposit > 0 && (
+                  <div className={`${isDarkTheme ? 'bg-slate-700/30' : 'bg-gray-100/30'} rounded-lg p-3 mb-4`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className={`text-sm ${theme.textMuted}`}>Your Position</span>
+                      <span className={`text-sm font-medium ${theme.textPrimary}`}>${vault.userDeposit.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className={`text-sm ${theme.textMuted}`}>Earnings</span>
+                      <span className="text-sm font-medium text-green-500">+${vault.userEarnings}</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => {
+                      setSelectedVault(vault);
+                      setShowDepositModal(true);
+                    }}
+                    className={`${theme.gradientButton} text-white py-2 px-4 rounded-lg font-medium transition-all duration-300 hover:scale-105 text-sm`}
+                  >
+                    Deposit
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedVault(vault);
+                      setShowWithdrawModal(true);
+                    }}
+                    disabled={vault.userDeposit === 0}
+                    className={`${vault.userDeposit > 0 ? `${theme.cardSecondary} border ${theme.textPrimary} hover:opacity-80` : 'bg-gray-400 text-gray-200 cursor-not-allowed'} py-2 px-4 rounded-lg font-medium transition-opacity text-sm`}
+                  >
+                    Withdraw
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 내 포지션 */}
+        <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+          <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>My Positions</h3>
+          <div className="space-y-4">
+            {vaults.filter(vault => vault.userDeposit > 0).map((vault) => (
+              <div key={vault.id} className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-10 h-10 rounded-full ${vault.bgColor} flex items-center justify-center text-lg`}>
+                      {vault.icon}
+                    </div>
+                    <div>
+                      <h4 className={`font-medium ${theme.textPrimary}`}>{vault.name}</h4>
+                      <p className={`text-sm ${theme.textMuted}`}>Deposited ${vault.userDeposit.toLocaleString()} {vault.symbol}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className={`font-semibold text-green-500`}>+${vault.userEarnings}</p>
+                    <p className={`text-sm ${theme.textMuted}`}>{vault.apy}% APY</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 거래 내역 */}
+        <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className={`text-xl font-bold ${theme.textPrimary}`}>Transaction History</h3>
+            <button className={`text-sm ${theme.accent} hover:opacity-80 transition-opacity`}>
+              View All
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {transactions.map((tx, index) => (
+              <div key={index} className={`flex items-center justify-between p-4 rounded-xl ${theme.cardSecondary} border hover:opacity-80 transition-opacity`}>
+                <div className="flex items-center space-x-4">
+                  <div className={`w-10 h-10 rounded-full ${
+                    tx.type === 'deposit' ? 'bg-green-500/20' : 
+                    tx.type === 'withdraw' ? 'bg-red-500/20' : 'bg-blue-500/20'
+                  } flex items-center justify-center`}>
+                    {tx.type === 'deposit' ? (
+                      <ArrowDownLeft className="w-5 h-5 text-green-500" />
+                    ) : tx.type === 'withdraw' ? (
+                      <ArrowUpRight className="w-5 h-5 text-red-500" />
+                    ) : (
+                      <Gift className="w-5 h-5 text-blue-500" />
+                    )}
+                  </div>
+                  <div>
+                    <p className={`font-medium ${theme.textPrimary} capitalize`}>
+                      {tx.type} {tx.vault}
+                    </p>
+                    <p className={`text-sm ${theme.textMuted}`}>
+                      {tx.date} • {tx.hash}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={`font-semibold ${
+                    tx.type === 'withdraw' ? 'text-red-500' : 'text-green-500'
+                  }`}>
+                    {tx.type === 'withdraw' ? '-' : '+'}${tx.amount.toLocaleString()}
+                  </p>
+                  <p className={`text-xs ${theme.textMuted}`}>
+                    {tx.type === 'earnings' ? 'Yield' : tx.vault}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 모달들 */}
+        <DepositModal />
+        <WithdrawModal />
+      </div>
+    );
+  };
 
   // 대시보드 페이지
   const DashboardPage = () => (
@@ -373,6 +739,106 @@ const PayzMeApp = () => {
               <p className={`${theme.accent} font-semibold`}>{booster.boost}</p>
             </div>
           ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // 레퍼럴 페이지
+  const ReferralPage = () => (
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
+        <div>
+          <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>Referral Program</h1>
+          <p className={theme.textSecondary}>Invite friends and earn mining bonuses together.</p>
+        </div>
+      </div>
+
+      {/* 레퍼럴 링크 카드 */}
+      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Your Referral Link</h3>
+        <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+          <div className="flex items-center justify-between">
+            <code className={`${theme.accent} text-sm break-all`}>
+              https://payzme.app/ref/0x45E...59Da6
+            </code>
+            <button className={`ml-4 ${isDarkTheme ? 'bg-cyan-500 hover:bg-cyan-400' : 'bg-blue-600 hover:bg-blue-500'} text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0`}>
+              Copy
+            </button>
+          </div>
+        </div>
+        <p className={`${theme.textMuted} text-sm mt-2`}>
+          Share this link with friends to earn referral bonuses when they start mining.
+        </p>
+      </div>
+
+      {/* 레퍼럴 통계 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <Users className={`w-8 h-8 ${isDarkTheme ? 'text-cyan-400' : 'text-blue-600'} mx-auto mb-3`} />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>23</p>
+          <p className={theme.textSecondary}>Total Referrals</p>
+        </div>
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <Gift className="w-8 h-8 text-green-500 mx-auto mb-3" />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>145.8</p>
+          <p className={theme.textSecondary}>Bonus PZM Earned</p>
+        </div>
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <BarChart3 className="w-8 h-8 text-purple-500 mx-auto mb-3" />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>+15.5</p>
+          <p className={theme.textSecondary}>Hash Power Bonus</p>
+        </div>
+      </div>
+
+      {/* 레퍼럴 목록 */}
+      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Your Referrals</h3>
+        <div className="space-y-4">
+          {[
+            { address: '0x1a2...8f9d', date: '2024-07-10', status: 'Active', bonus: '+0.5 H/s' },
+            { address: '0x3c4...2e1a', date: '2024-07-09', status: 'Active', bonus: '+0.5 H/s' },
+            { address: '0x5f6...7c8b', date: '2024-07-08', status: 'Pending', bonus: 'Pending' },
+            { address: '0x9d0...4a5f', date: '2024-07-07', status: 'Active', bonus: '+0.5 H/s' },
+          ].map((referral, index) => (
+            <div key={index} className={`${theme.cardSecondary} rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 border`}>
+              <div className="flex-1">
+                <p className={`${theme.textPrimary} font-medium`}>{referral.address}</p>
+                <p className={`${theme.textMuted} text-sm`}>Joined {referral.date}</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  referral.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
+                }`}>
+                  {referral.status}
+                </span>
+                <span className={`${theme.accent} font-medium`}>{referral.bonus}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 레퍼럴 보상 안내 */}
+      <div className={`${isDarkTheme ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-cyan-400/20' : 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20'} backdrop-blur-lg rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Referral Rewards</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className={`${theme.accent} font-medium mb-2`}>For You:</p>
+            <ul className={`${theme.textSecondary} space-y-1`}>
+              <li>• +0.5 H/s per active referral</li>
+              <li>• 5% of their mining rewards</li>
+              <li>• Bonus missions unlock</li>
+            </ul>
+          </div>
+          <div>
+            <p className={`${theme.accent} font-medium mb-2`}>For Your Friend:</p>
+            <ul className={`${theme.textSecondary} space-y-1`}>
+              <li>• +1.0 H/s welcome bonus</li>
+              <li>• 10% extra mining rewards (7 days)</li>
+              <li>• Premium features trial</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -595,104 +1061,6 @@ const PayzMeApp = () => {
       </div>
     );
   };
-  const ReferralPage = () => (
-    <div className="p-6 space-y-6">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
-        <div>
-          <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>Referral Program</h1>
-          <p className={theme.textSecondary}>Invite friends and earn mining bonuses together.</p>
-        </div>
-      </div>
-
-      {/* 레퍼럴 링크 카드 */}
-      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Your Referral Link</h3>
-        <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
-          <div className="flex items-center justify-between">
-            <code className={`${theme.accent} text-sm break-all`}>
-              https://payzme.app/ref/0x45E...59Da6
-            </code>
-            <button className={`ml-4 ${isDarkTheme ? 'bg-cyan-500 hover:bg-cyan-400' : 'bg-blue-600 hover:bg-blue-500'} text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0`}>
-              Copy
-            </button>
-          </div>
-        </div>
-        <p className={`${theme.textMuted} text-sm mt-2`}>
-          Share this link with friends to earn referral bonuses when they start mining.
-        </p>
-      </div>
-
-      {/* 레퍼럴 통계 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <Users className={`w-8 h-8 ${isDarkTheme ? 'text-cyan-400' : 'text-blue-600'} mx-auto mb-3`} />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>23</p>
-          <p className={theme.textSecondary}>Total Referrals</p>
-        </div>
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <Gift className="w-8 h-8 text-green-500 mx-auto mb-3" />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>145.8</p>
-          <p className={theme.textSecondary}>Bonus PZM Earned</p>
-        </div>
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <BarChart3 className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>+15.5</p>
-          <p className={theme.textSecondary}>Hash Power Bonus</p>
-        </div>
-      </div>
-
-      {/* 레퍼럴 목록 */}
-      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Your Referrals</h3>
-        <div className="space-y-4">
-          {[
-            { address: '0x1a2...8f9d', date: '2024-07-10', status: 'Active', bonus: '+0.5 H/s' },
-            { address: '0x3c4...2e1a', date: '2024-07-09', status: 'Active', bonus: '+0.5 H/s' },
-            { address: '0x5f6...7c8b', date: '2024-07-08', status: 'Pending', bonus: 'Pending' },
-            { address: '0x9d0...4a5f', date: '2024-07-07', status: 'Active', bonus: '+0.5 H/s' },
-          ].map((referral, index) => (
-            <div key={index} className={`${theme.cardSecondary} rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 border`}>
-              <div className="flex-1">
-                <p className={`${theme.textPrimary} font-medium`}>{referral.address}</p>
-                <p className={`${theme.textMuted} text-sm`}>Joined {referral.date}</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  referral.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
-                }`}>
-                  {referral.status}
-                </span>
-                <span className={`${theme.accent} font-medium`}>{referral.bonus}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 레퍼럴 보상 안내 */}
-      <div className={`${isDarkTheme ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-cyan-400/20' : 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20'} backdrop-blur-lg rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Referral Rewards</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className={`${theme.accent} font-medium mb-2`}>For You:</p>
-            <ul className={`${theme.textSecondary} space-y-1`}>
-              <li>• +0.5 H/s per active referral</li>
-              <li>• 5% of their mining rewards</li>
-              <li>• Bonus missions unlock</li>
-            </ul>
-          </div>
-          <div>
-            <p className={`${theme.accent} font-medium mb-2`}>For Your Friend:</p>
-            <ul className={`${theme.textSecondary} space-y-1`}>
-              <li>• +1.0 H/s welcome bonus</li>
-              <li>• 10% extra mining rewards (7 days)</li>
-              <li>• Premium features trial</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   // 메인 레이아웃
   const MainLayout = ({ children }) => (
@@ -728,6 +1096,7 @@ const PayzMeApp = () => {
       {currentPage === 'dashboard' && <DashboardPage />}
       {currentPage === 'mining' && <MiningPage />}
       {currentPage === 'referral' && <ReferralPage />}
+      {currentPage === 'defi' && <DeFiPage />}
       {currentPage === 'card' && <CardPage />}
     </MainLayout>
   );
