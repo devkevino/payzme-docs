@@ -110,6 +110,7 @@ const PayzMeApp = () => {
       { id: 'mining', icon: Zap, label: 'Mining' },
       { id: 'referral', icon: Users, label: 'Referral' },
       { id: 'defi', icon: BarChart3, label: 'DeFi' },
+      { id: 'swap', icon: ArrowUpRight, label: 'Swap' },
       { id: 'card', icon: CreditCard, label: 'Card' },
     ];
 
@@ -580,6 +581,412 @@ const PayzMeApp = () => {
     );
   };
 
+  // Swap 페이지 
+  const SwapPage = () => {
+    const [swapAmount, setSwapAmount] = useState('');
+    const [isSwapping, setIsSwapping] = useState(false);
+    const [swapHistory, setSwapHistory] = useState([
+      { id: 1, points: 1000, tokens: 10, date: '2024-07-20', status: 'completed', txHash: '0x1a2b...3c4d' },
+      { id: 2, points: 500, tokens: 5, date: '2024-07-19', status: 'completed', txHash: '0x5e6f...7g8h' },
+      { id: 3, points: 2000, tokens: 20, date: '2024-07-18', status: 'pending', txHash: '0x9i0j...1k2l' },
+    ]);
+
+    // Mock 데이터
+    const pointBalance = 4885.48;
+    const tokenBalance = 485.48;
+    const swapRate = 100; // 100 포인트 = 1 토큰
+    const dailyLimit = 5000;
+    const dailyUsed = 1500;
+    const remainingDaily = dailyLimit - dailyUsed;
+
+    const handleSwap = async () => {
+      if (!swapAmount || parseFloat(swapAmount) <= 0) return;
+      
+      setIsSwapping(true);
+      
+      // 실제로는 API 호출
+      setTimeout(() => {
+        const newSwap = {
+          id: swapHistory.length + 1,
+          points: parseFloat(swapAmount),
+          tokens: parseFloat(swapAmount) / swapRate,
+          date: new Date().toISOString().split('T')[0],
+          status: 'pending',
+          txHash: '0x' + Math.random().toString(16).substr(2, 8) + '...' + Math.random().toString(16).substr(2, 4)
+        };
+        setSwapHistory([newSwap, ...swapHistory]);
+        setSwapAmount('');
+        setIsSwapping(false);
+      }, 2000);
+    };
+
+    const getStatusColor = (status) => {
+      switch (status) {
+        case 'completed': return 'text-green-500 bg-green-500/20';
+        case 'pending': return 'text-yellow-500 bg-yellow-500/20';
+        case 'failed': return 'text-red-500 bg-red-500/20';
+        default: return 'text-gray-500 bg-gray-500/20';
+      }
+    };
+
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
+          <div>
+            <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>Point Swap</h1>
+            <p className={theme.textSecondary}>Convert your earned points to PZM tokens instantly.</p>
+          </div>
+          <div className={`mt-4 lg:mt-0 ${theme.cardBg} rounded-xl px-4 py-2 border`}>
+            <span className={`${theme.accent} font-medium flex items-center`}>
+              <ArrowUpRight className="w-4 h-4 mr-2" />
+              1 PZM = 100 Points
+            </span>
+          </div>
+        </div>
+
+        {/* 잔액 및 한도 정보 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <Gift className={`w-8 h-8 ${theme.accent}`} />
+              <TrendingUp className="w-5 h-5 text-green-500" />
+            </div>
+            <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>{pointBalance.toLocaleString()}</p>
+            <p className={theme.textSecondary}>Available Points</p>
+          </div>
+
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <DollarSign className="w-8 h-8 text-blue-500" />
+              <span className="text-blue-500 text-sm font-medium">PZM</span>
+            </div>
+            <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>{tokenBalance}</p>
+            <p className={theme.textSecondary}>Current Tokens</p>
+          </div>
+
+          <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+            <div className="flex items-center justify-between mb-4">
+              <Clock className="w-8 h-8 text-purple-500" />
+              <span className="text-purple-500 text-sm font-medium">{((remainingDaily / dailyLimit) * 100).toFixed(0)}%</span>
+            </div>
+            <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>{remainingDaily.toLocaleString()}</p>
+            <p className={theme.textSecondary}>Daily Limit Remaining</p>
+          </div>
+        </div>
+
+        {/* 스왑 인터페이스 */}
+        <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+          <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Swap Points to Tokens</h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* 스왑 입력 */}
+            <div className="space-y-6">
+              {/* From - Points */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <label className={`block text-sm font-medium ${theme.textSecondary}`}>From</label>
+                  <span className={`text-sm ${theme.textMuted}`}>
+                    Balance: {pointBalance.toLocaleString()} Points
+                  </span>
+                </div>
+                <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-1">
+                      <input
+                        type="number"
+                        value={swapAmount}
+                        onChange={(e) => setSwapAmount(e.target.value)}
+                        placeholder="0"
+                        max={Math.min(pointBalance, remainingDaily)}
+                        className={`w-full text-2xl font-bold bg-transparent ${theme.textPrimary} placeholder-gray-400 focus:outline-none`}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Gift className={`w-6 h-6 ${theme.accent}`} />
+                      <span className={`${theme.textPrimary} font-medium`}>Points</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 화살표 */}
+              <div className="flex justify-center">
+                <div className={`w-10 h-10 rounded-full ${theme.cardSecondary} border flex items-center justify-center`}>
+                  <ArrowUpRight className={`w-5 h-5 ${theme.textSecondary}`} />
+                </div>
+              </div>
+
+              {/* To - Tokens */}
+              <div className="space-y-3">
+                <label className={`block text-sm font-medium ${theme.textSecondary}`}>To</label>
+                <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-1">
+                      <div className={`text-2xl font-bold ${theme.textPrimary}`}>
+                        {swapAmount ? (parseFloat(swapAmount) / swapRate).toFixed(2) : '0.00'}
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-6 h-6 rounded-full ${theme.accentBg} flex items-center justify-center`}>
+                        <span className="text-white text-xs font-bold">P</span>
+                      </div>
+                      <span className={`${theme.textPrimary} font-medium`}>PZM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 빠른 금액 선택 */}
+              <div className="grid grid-cols-4 gap-2">
+                {[500, 1000, 2500, 5000].map((amount) => (
+                  <button
+                    key={amount}
+                    onClick={() => setSwapAmount(amount.toString())}
+                    disabled={amount > Math.min(pointBalance, remainingDaily)}
+                    className={`py-2 px-3 rounded-lg border ${theme.cardSecondary} ${theme.textSecondary} hover:${theme.textPrimary} transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    {amount.toLocaleString()}
+                  </button>
+                ))}
+              </div>
+
+              {/* 스왑 버튼 */}
+              <button 
+                onClick={handleSwap}
+                disabled={!swapAmount || isSwapping || parseFloat(swapAmount) > Math.min(pointBalance, remainingDaily)}
+                className={`w-full ${theme.gradientButton} text-white py-4 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2`}
+              >
+                {isSwapping ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Processing Swap...</span>
+                  </>
+                ) : (
+                  <>
+                    <ArrowUpRight className="w-5 h-5" />
+                    <span>Swap Now</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* 스왑 정보 */}
+            <div className="space-y-4">
+              <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                <h4 className={`font-medium mb-4 ${theme.textPrimary}`}>Swap Details</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className={theme.textSecondary}>Exchange Rate</span>
+                    <span className={`${theme.textPrimary} font-medium`}>100 Points = 1 PZM</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className={theme.textSecondary}>Network Fee</span>
+                    <span className={`${theme.textPrimary} font-medium`}>Free</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className={theme.textSecondary}>Processing Time</span>
+                    <span className={`${theme.textPrimary} font-medium`}>~2 minutes</span>
+                  </div>
+                  {swapAmount && (
+                    <>
+                      <hr className={`border-t ${isDarkTheme ? 'border-slate-600' : 'border-gray-300'}`} />
+                      <div className="flex justify-between font-medium">
+                        <span className={theme.textPrimary}>You'll receive</span>
+                        <span className={`${theme.accent}`}>
+                          {(parseFloat(swapAmount) / swapRate).toFixed(2)} PZM
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className={`${isDarkTheme ? 'bg-yellow-500/10 border-yellow-400/20' : 'bg-yellow-50 border-yellow-200'} rounded-xl p-4 border`}>
+                <div className="flex items-start space-x-3">
+                  <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <p className={`font-medium mb-1 ${theme.textPrimary}`}>Daily Limit Notice</p>
+                    <p className={theme.textSecondary}>
+                      You can swap up to {dailyLimit.toLocaleString()} points per day. 
+                      {remainingDaily > 0 
+                        ? ` ${remainingDaily.toLocaleString()} points remaining today.`
+                        : ' Daily limit reached.'
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+                <h4 className={`font-medium mb-3 ${theme.textPrimary}`}>Security Features</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4 text-green-500" />
+                    <span className={theme.textSecondary}>Multi-signature wallet protection</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4 text-green-500" />
+                    <span className={theme.textSecondary}>Automated fraud detection</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Shield className="w-4 h-4 text-green-500" />
+                    <span className={theme.textSecondary}>Real-time transaction monitoring</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 스왑 히스토리 */}
+        <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+          <div className="flex justify-between items-center mb-6">
+            <h3 className={`text-xl font-bold ${theme.textPrimary}`}>Swap History</h3>
+            <button className={`text-sm ${theme.accent} hover:opacity-80 transition-opacity`}>
+              View All
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {swapHistory.map((swap) => (
+              <div key={swap.id} className={`flex items-center justify-between p-4 rounded-xl ${theme.cardSecondary} border hover:opacity-80 transition-opacity`}>
+                <div className="flex items-center space-x-4">
+                  <div className={`w-10 h-10 rounded-full ${isDarkTheme ? 'bg-slate-600' : 'bg-gray-200'} flex items-center justify-center`}>
+                    <ArrowUpRight className={`w-5 h-5 ${theme.accent}`} />
+                  </div>
+                  <div>
+                    <p className={`font-medium ${theme.textPrimary}`}>
+                      Swap {swap.points.toLocaleString()} Points → {swap.tokens} PZM
+                    </p>
+                    <p className={`text-sm ${theme.textMuted}`}>
+                      {swap.date} • {swap.txHash}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right flex items-center space-x-3">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(swap.status)}`}>
+                    {swap.status}
+                  </span>
+                  <button className={`text-sm ${theme.accent} hover:opacity-80 transition-opacity`}>
+                    <ExternalLink className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {swapHistory.length === 0 && (
+            <div className="text-center py-12">
+              <ArrowUpRight className={`w-12 h-12 ${theme.textMuted} mx-auto mb-4`} />
+              <p className={`${theme.textPrimary} font-medium mb-2`}>No swaps yet</p>
+              <p className={theme.textSecondary}>Your swap history will appear here once you make your first swap.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // 레퍼럴 페이지
+  const ReferralPage = () => (
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
+        <div>
+          <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>Referral Program</h1>
+          <p className={theme.textSecondary}>Invite friends and earn mining bonuses together.</p>
+        </div>
+      </div>
+
+      {/* 레퍼럴 링크 카드 */}
+      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Your Referral Link</h3>
+        <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
+          <div className="flex items-center justify-between">
+            <code className={`${theme.accent} text-sm break-all`}>
+              https://payzme.app/ref/0x45E...59Da6
+            </code>
+            <button className={`ml-4 ${isDarkTheme ? 'bg-cyan-500 hover:bg-cyan-400' : 'bg-blue-600 hover:bg-blue-500'} text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0`}>
+              Copy
+            </button>
+          </div>
+        </div>
+        <p className={`${theme.textMuted} text-sm mt-2`}>
+          Share this link with friends to earn referral bonuses when they start mining.
+        </p>
+      </div>
+
+      {/* 레퍼럴 통계 */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <Users className={`w-8 h-8 ${isDarkTheme ? 'text-cyan-400' : 'text-blue-600'} mx-auto mb-3`} />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>23</p>
+          <p className={theme.textSecondary}>Total Referrals</p>
+        </div>
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <Gift className="w-8 h-8 text-green-500 mx-auto mb-3" />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>145.8</p>
+          <p className={theme.textSecondary}>Bonus PZM Earned</p>
+        </div>
+        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
+          <BarChart3 className="w-8 h-8 text-purple-500 mx-auto mb-3" />
+          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>+15.5</p>
+          <p className={theme.textSecondary}>Hash Power Bonus</p>
+        </div>
+      </div>
+
+      {/* 레퍼럴 목록 */}
+      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Your Referrals</h3>
+        <div className="space-y-4">
+          {[
+            { address: '0x1a2...8f9d', date: '2024-07-10', status: 'Active', bonus: '+0.5 H/s' },
+            { address: '0x3c4...2e1a', date: '2024-07-09', status: 'Active', bonus: '+0.5 H/s' },
+            { address: '0x5f6...7c8b', date: '2024-07-08', status: 'Pending', bonus: 'Pending' },
+            { address: '0x9d0...4a5f', date: '2024-07-07', status: 'Active', bonus: '+0.5 H/s' },
+          ].map((referral, index) => (
+            <div key={index} className={`${theme.cardSecondary} rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 border`}>
+              <div className="flex-1">
+                <p className={`${theme.textPrimary} font-medium`}>{referral.address}</p>
+                <p className={`${theme.textMuted} text-sm`}>Joined {referral.date}</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  referral.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
+                }`}>
+                  {referral.status}
+                </span>
+                <span className={`${theme.accent} font-medium`}>{referral.bonus}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 레퍼럴 보상 안내 */}
+      <div className={`${isDarkTheme ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-cyan-400/20' : 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20'} backdrop-blur-lg rounded-2xl p-6 border`}>
+        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Referral Rewards</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className={`${theme.accent} font-medium mb-2`}>For You:</p>
+            <ul className={`${theme.textSecondary} space-y-1`}>
+              <li>• +0.5 H/s per active referral</li>
+              <li>• 5% of their mining rewards</li>
+              <li>• Bonus missions unlock</li>
+            </ul>
+          </div>
+          <div>
+            <p className={`${theme.accent} font-medium mb-2`}>For Your Friend:</p>
+            <ul className={`${theme.textSecondary} space-y-1`}>
+              <li>• +1.0 H/s welcome bonus</li>
+              <li>• 10% extra mining rewards (7 days)</li>
+              <li>• Premium features trial</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   // 대시보드 페이지
   const DashboardPage = () => (
     <div className="p-6 space-y-6">
@@ -739,106 +1146,6 @@ const PayzMeApp = () => {
               <p className={`${theme.accent} font-semibold`}>{booster.boost}</p>
             </div>
           ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  // 레퍼럴 페이지
-  const ReferralPage = () => (
-    <div className="p-6 space-y-6">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
-        <div>
-          <h1 className={`text-2xl lg:text-3xl font-bold mb-2 ${theme.textPrimary}`}>Referral Program</h1>
-          <p className={theme.textSecondary}>Invite friends and earn mining bonuses together.</p>
-        </div>
-      </div>
-
-      {/* 레퍼럴 링크 카드 */}
-      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Your Referral Link</h3>
-        <div className={`${theme.cardSecondary} rounded-xl p-4 border`}>
-          <div className="flex items-center justify-between">
-            <code className={`${theme.accent} text-sm break-all`}>
-              https://payzme.app/ref/0x45E...59Da6
-            </code>
-            <button className={`ml-4 ${isDarkTheme ? 'bg-cyan-500 hover:bg-cyan-400' : 'bg-blue-600 hover:bg-blue-500'} text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-shrink-0`}>
-              Copy
-            </button>
-          </div>
-        </div>
-        <p className={`${theme.textMuted} text-sm mt-2`}>
-          Share this link with friends to earn referral bonuses when they start mining.
-        </p>
-      </div>
-
-      {/* 레퍼럴 통계 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <Users className={`w-8 h-8 ${isDarkTheme ? 'text-cyan-400' : 'text-blue-600'} mx-auto mb-3`} />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>23</p>
-          <p className={theme.textSecondary}>Total Referrals</p>
-        </div>
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <Gift className="w-8 h-8 text-green-500 mx-auto mb-3" />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>145.8</p>
-          <p className={theme.textSecondary}>Bonus PZM Earned</p>
-        </div>
-        <div className={`${theme.cardBg} rounded-2xl p-6 border text-center`}>
-          <BarChart3 className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-          <p className={`text-3xl font-bold mb-2 ${theme.textPrimary}`}>+15.5</p>
-          <p className={theme.textSecondary}>Hash Power Bonus</p>
-        </div>
-      </div>
-
-      {/* 레퍼럴 목록 */}
-      <div className={`${theme.cardBg} rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-6 ${theme.textPrimary}`}>Your Referrals</h3>
-        <div className="space-y-4">
-          {[
-            { address: '0x1a2...8f9d', date: '2024-07-10', status: 'Active', bonus: '+0.5 H/s' },
-            { address: '0x3c4...2e1a', date: '2024-07-09', status: 'Active', bonus: '+0.5 H/s' },
-            { address: '0x5f6...7c8b', date: '2024-07-08', status: 'Pending', bonus: 'Pending' },
-            { address: '0x9d0...4a5f', date: '2024-07-07', status: 'Active', bonus: '+0.5 H/s' },
-          ].map((referral, index) => (
-            <div key={index} className={`${theme.cardSecondary} rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0 border`}>
-              <div className="flex-1">
-                <p className={`${theme.textPrimary} font-medium`}>{referral.address}</p>
-                <p className={`${theme.textMuted} text-sm`}>Joined {referral.date}</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  referral.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'
-                }`}>
-                  {referral.status}
-                </span>
-                <span className={`${theme.accent} font-medium`}>{referral.bonus}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 레퍼럴 보상 안내 */}
-      <div className={`${isDarkTheme ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-cyan-400/20' : 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/20'} backdrop-blur-lg rounded-2xl p-6 border`}>
-        <h3 className={`text-xl font-bold mb-4 ${theme.textPrimary}`}>Referral Rewards</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div>
-            <p className={`${theme.accent} font-medium mb-2`}>For You:</p>
-            <ul className={`${theme.textSecondary} space-y-1`}>
-              <li>• +0.5 H/s per active referral</li>
-              <li>• 5% of their mining rewards</li>
-              <li>• Bonus missions unlock</li>
-            </ul>
-          </div>
-          <div>
-            <p className={`${theme.accent} font-medium mb-2`}>For Your Friend:</p>
-            <ul className={`${theme.textSecondary} space-y-1`}>
-              <li>• +1.0 H/s welcome bonus</li>
-              <li>• 10% extra mining rewards (7 days)</li>
-              <li>• Premium features trial</li>
-            </ul>
-          </div>
         </div>
       </div>
     </div>
@@ -1097,6 +1404,7 @@ const PayzMeApp = () => {
       {currentPage === 'mining' && <MiningPage />}
       {currentPage === 'referral' && <ReferralPage />}
       {currentPage === 'defi' && <DeFiPage />}
+      {currentPage === 'swap' && <SwapPage />}
       {currentPage === 'card' && <CardPage />}
     </MainLayout>
   );
