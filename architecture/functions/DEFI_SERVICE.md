@@ -39,7 +39,7 @@
 |--------------|--------------------------------------|
 | Vault 잔액   | 사용자가 해당 Vault에 보유한 총 자산   |
 | 예치 원금    | 최초 예치 시점의 자산                 |
-| 수수료       | Yearn 및 Payzme 플랫폼 수수료 (정책)  |
+| 수수료       | Yearn 플랫폼 수수료                   |
 
 ---
 
@@ -49,25 +49,6 @@
 - 지원 Vault는 Payzme에서 사전 선정
 - 트랜잭션 수수료(가스비)는 사용자 부담
 - Vault별 APY, 위험도 등 정보는 실시간 연동
-
----
-
-## 🛠️ 백엔드 처리 예시 (의사코드)
-
-```python
-def deposit_to_vault(user, vault_id, amount):
-    # Web3 연동으로 Yearn Vault에 예치 트랜잭션 실행
-    tx_hash = yearn_api.deposit(vault_id, user.wallet, amount)
-    save_transaction(user.id, vault_id, amount, 'deposit', tx_hash)
-    return tx_hash
-
-def get_vault_profit(user, vault_id):
-    principal = get_user_principal(user.id, vault_id)
-    current_balance = yearn_api.get_balance(vault_id, user.wallet)
-    fee = get_platform_fee(vault_id)
-    profit = (current_balance - principal) * (1 - fee)
-    return profit
-```
 
 ---
 
